@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate Google Play Store assets from the Lyroes logo.
+Generate Google Play Store assets from your app logo.
 
 This script generates all required images for the Google Play Store listing:
 - App icon (512x512)
@@ -9,7 +9,7 @@ This script generates all required images for the Google Play Store listing:
 - Google Play Games feature graphic (1920x1080)
 
 Usage:
-    python3 generate-playstore-assets.py [--logo-path PATH] [--output-dir DIR]
+    python3 generate-playstore-assets.py --logo-path PATH [--output-dir DIR]
 """
 
 import argparse
@@ -42,7 +42,7 @@ def create_feature_graphic(logo_img, output_path):
     feature = Image.new("RGB", (width, height))
     draw = ImageDraw.Draw(feature)
 
-    # Gradient from dark purple to blue (Lyroes theme colors)
+    # Gradient from dark purple to blue
     for y in range(height):
         # Purple (#6366f1) to Blue (#3b82f6)
         r = int(99 + (59 - 99) * (y / height))
@@ -133,17 +133,17 @@ def create_play_games_feature(logo_img, output_path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate Google Play Store assets from Lyroes logo"
+        description="Generate Google Play Store assets from your app logo"
     )
     parser.add_argument(
         "--logo-path",
-        default="../lyroes-web-gui/public/assets/logo.png",
-        help="Path to the source logo (default: ../lyroes-web-gui/public/assets/logo.png)",
+        required=True,
+        help="Path to the source logo (PNG format recommended)",
     )
     parser.add_argument(
         "--output-dir",
-        default="./playstore-assets",
-        help="Output directory for generated assets (default: ./playstore-assets)",
+        default="./output",
+        help="Output directory for generated assets (default: ./output)",
     )
 
     args = parser.parse_args()

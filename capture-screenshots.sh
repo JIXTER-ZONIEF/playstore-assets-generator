@@ -7,19 +7,20 @@ and processes them to meet Play Store requirements.
 
 Requirements:
 - Android device connected via USB with USB debugging enabled
-- Lyroes app installed and running on the device
+- Your Android app installed on the device
 - adb installed
 
 Usage:
-    ./capture-screenshots.sh [--output-dir DIR] [--count N]
+    ./capture-screenshots.sh [OUTPUT_DIR] [DEVICE_ID] [PACKAGE_NAME]
 """
 
 set -e
 
 # Configuration
-OUTPUT_DIR="${1:-./playstore-assets/screenshots}"
+OUTPUT_DIR="${1:-./output/screenshots}"
 DEVICE_ID="${2:-}"
-SCREENSHOT_COUNT="${3:-4}"
+PACKAGE_NAME="${3:-}"
+SCREENSHOT_COUNT="${4:-4}"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -28,7 +29,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}📱 Lyroes Screenshot Capture Tool${NC}\n"
+echo -e "${BLUE}📱 Play Store Screenshot Capture Tool${NC}\n"
 
 # Check if adb is available
 if ! command -v adb &> /dev/null; then
@@ -63,18 +64,20 @@ echo -e "${BLUE}Output directory: $OUTPUT_DIR${NC}\n"
 
 # Get device screen resolution
 RESOLUTION=$(adb -s "$DEVICE_ID" shell wm size | grep "Physical size" | cut -d: -f2 | tr -d ' ')
-echo -e "${BLUE}Device resolution: $RESOLUTION${NC}"
+echo -e "${BLUE}Device resolution: $RESOLUTION${NC}\n"
 
-# Check if app is running
-PACKAGE_NAME="fr.jixter.lyroes"
-echo -e "\n${BLUE}Checking if Lyroes is running...${NC}"
-if ! adb -s "$DEVICE_ID" shell pidof "$PACKAGE_NAME" &> /dev/null; then
-    echo -e "${YELLOW}⚠ Lyroes app is not running. Launching...${NC}"
-    adb -s "$DEVICE_ID" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 &> /dev/null
-    sleep 3
+# Check if app is running (if package name provided)
+if [ -n "$PACKAGE_NAME" ]; then
+    echo -e "${BLUE}Checking if app ($PACKAGE_NAME) is running...${NC}"
+    if ! adb -s "$DEVICE_ID" shell pidof "$PACKAGE_NAME" &> /dev/null; then
+        echo -e "${YELLOW}⚠ App is not running. Launching...${NC}"
+        adb -s "$DEVICE_ID" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 &> /dev/null
+        sleep 3
+    fi
+    echo -e "${GREEN}✓ App is running${NC}\n"
+else
+    echo -e "${YELLOW}Note: No package name provided. Make sure your app is running on the device.${NC}\n"
 fi
-
-echo -e "${GREEN}✓ App is running${NC}\n"
 
 # Function to capture screenshot
 capture_screenshot() {
@@ -147,14 +150,6 @@ done
 echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}✅ Screenshot capture complete!${NC}\n"
 
-# Check if Python/Pillow is available for processing
-if command -v python3 &> /dev/null; then
-    VENV_PYTHON="/home/yosac/IdeaProjects/lyroes-mobile/.venv/bin/python3"
-    if [ -f "$VENV_PYTHON" ]; then
-        echo -e "${BLUE}Processing screenshots to Play Store format...${NC}"
-        # Note: Could add Python script here to resize/crop if needed
-    fi
-fi
 
 echo -e "${BLUE}Screenshots saved to: $OUTPUT_DIR${NC}"
 echo ""

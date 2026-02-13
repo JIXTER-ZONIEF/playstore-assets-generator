@@ -6,42 +6,48 @@ VENV_BIN := $(VENV)/bin
 PIP := $(VENV_BIN)/pip
 PYTHON_VENV := $(VENV_BIN)/python3
 
-# Default logo path (adjust if needed)
-LOGO_PATH := ../lyroes-web-gui/public/assets/logo.png
+# Configuration (adjust these paths for your project)
+LOGO_PATH ?= ./logo.png
 OUTPUT_DIR := ./output
+PACKAGE_NAME ?=
 
-help: ## Afficher cette aide
-	@echo "Lyroes Play Store Tools - Commandes disponibles:"
+help: ## Show this help
+	@echo "Play Store Assets Generator - Available commands:"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo ""
 
-setup: ## Installer les dépendances Python
-	@echo "🔧 Installation des dépendances..."
+setup: ## Install Python dependencies
+	@echo "🔧 Installing dependencies..."
 	@if [ ! -d "$(VENV)" ]; then \
-		echo "Création de l'environnement virtuel..."; \
+		echo "Creating virtual environment..."; \
 		$(PYTHON) -m venv $(VENV); \
 	fi
-	@echo "Installation de Pillow..."
+	@echo "Installing Pillow..."
 	@$(PIP) install -q -r requirements.txt
-	@echo "✅ Installation terminée!"
+	@echo "✅ Installation complete!"
 
-generate-assets: setup ## Générer les assets graphiques depuis le logo
-	@echo "🎨 Génération des assets Play Store..."
+generate-assets: setup ## Generate Play Store assets from logo
+	@echo "🎨 Generating Play Store assets..."
+	@if [ ! -f "$(LOGO_PATH)" ]; then \
+		echo "❌ Error: Logo not found at $(LOGO_PATH)"; \
+		echo "   Please set LOGO_PATH in Makefile or provide path with: make generate-assets LOGO_PATH=/path/to/logo.png"; \
+		exit 1; \
+	fi
 	@mkdir -p $(OUTPUT_DIR)
 	@$(PYTHON_VENV) generate-playstore-assets.py --logo-path $(LOGO_PATH) --output-dir $(OUTPUT_DIR)
 
-capture-screenshots: ## Capturer les screenshots de l'appareil Android
-	@echo "📱 Lancement de la capture de screenshots..."
+capture-screenshots: ## Capture screenshots from Android device
+	@echo "📱 Starting screenshot capture..."
 	@mkdir -p $(OUTPUT_DIR)/screenshots
-	@./capture-screenshots.sh $(OUTPUT_DIR)/screenshots
+	@if [ -z "$(PACKAGE_NAME)" ]; then \
+		./capture-screenshots.sh $(OUTPUT_DIR)/screenshots; \
+	else \
+		./capture-screenshots.sh $(OUTPUT_DIR)/screenshots "" $(PACKAGE_NAME); \
+	fi
 
-clean: ## Nettoyer les fichiers générés
-	@echo "🧹 Nettoyage..."
+clean: ## Clean generated files
+	@echo "🧹 Cleaning..."
 	@rm -rf $(OUTPUT_DIR)
 	@rm -rf $(VENV)
-	@echo "✅ Nettoyage terminé!"
-
-test-assets: setup ## Tester la génération d'assets (avec logo de test)
-	@echo "🧪 Test de génération..."
-	@$(PYTHON_VENV) generate-playstore-assets.py --help
+	@echo "✅ Cleanup complete!"

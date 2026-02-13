@@ -1,140 +1,144 @@
-# Lyroes Play Store Tools
+# Play Store Assets Generator
 
-Tools pour générer les assets graphiques et captures d'écran pour la fiche Google Play Store de Lyroes.
+Automated tools to generate graphic assets and capture screenshots for your Google Play Store listing.
 
-## 🎯 Fonctionnalités
+## 🎯 Features
 
-- **Génération automatique des assets graphiques** à partir du logo Lyroes
-  - Icône de l'application (512x512)
-  - Image de présentation (1024x500)
-  - Logo Google Play Games (600x400, transparent)
-  - Image de présentation Google Play Games (1920x1080)
+- **Automatic graphic asset generation** from your app logo
+  - App icon (512x512)
+  - Feature graphic (1024x500)
+  - Google Play Games logo (600x400, transparent)
+  - Google Play Games feature graphic (1920x1080)
 
-- **Capture interactive de screenshots** depuis un appareil Android
-  - Capture guidée étape par étape
-  - Validation automatique des formats Play Store
-  - Sauvegarde organisée
+- **Interactive screenshot capture** from Android devices
+  - Step-by-step guided capture
+  - Automatic Play Store format validation
+  - Organized output structure
 
-## 📋 Prérequis
+## 📋 Prerequisites
 
-### Pour la génération d'assets
+### For asset generation
 - Python 3.8+
-- Pillow (installé automatiquement avec `make setup`)
+- Pillow (automatically installed with `make setup`)
 
-### Pour la capture de screenshots
+### For screenshot capture
 - adb (Android Debug Bridge)
-- Appareil Android connecté en USB
-- Débogage USB activé sur l'appareil
-- Application Lyroes installée sur l'appareil
+- Android device connected via USB
+- USB debugging enabled on device
+- Your app installed on the device
 
 ## 🚀 Installation
 
 ```bash
-# Cloner le repository
-git clone https://github.com/YoannSACHOT/lyroes-playstore-tools.git
-cd lyroes-playstore-tools
+# Clone the repository
+git clone https://github.com/YoannSACHOT/playstore-assets-generator.git
+cd playstore-assets-generator
 
-# Installer les dépendances
+# Install dependencies
 make setup
 ```
 
 ## 📖 Usage
 
-### Génération des assets graphiques
+### Generating graphic assets
 
 ```bash
-# Générer tous les assets depuis le logo Lyroes
-make generate-assets
+# Generate all assets from your logo
+make generate-assets LOGO_PATH=/path/to/your/logo.png
 
-# Ou directement avec Python
+# Or directly with Python
 python3 generate-playstore-assets.py --logo-path /path/to/logo.png
 ```
 
-**Sorties générées** (dans `./output/`) :
-- `app-icon-512.png` - Icône de l'application (512x512)
-- `feature-graphic-1024x500.png` - Image de présentation (1024x500)
-- `play-games-logo-600x400.png` - Logo Google Play Games (600x400, transparent)
-- `play-games-feature-1920x1080.png` - Image Google Play Games (1920x1080)
+**Generated outputs** (in `./output/`):
+- `app-icon-512.png` - App icon (512x512)
+- `feature-graphic-1024x500.png` - Feature graphic (1024x500)
+- `play-games-logo-600x400.png` - Play Games logo (600x400, transparent)
+- `play-games-feature-1920x1080.png` - Play Games feature (1920x1080)
 
-### Capture de screenshots
+### Capturing screenshots
 
 ```bash
-# Lancer la capture interactive
+# Launch interactive capture
 make capture-screenshots
 
-# Ou directement avec le script
-./capture-screenshots.sh
+# Or with specific package name
+make capture-screenshots PACKAGE_NAME=com.yourcompany.yourapp
+
+# Or directly with the script
+./capture-screenshots.sh ./output/screenshots "" com.yourcompany.yourapp
 ```
 
-**Instructions de capture** :
-1. Connectez votre appareil Android en USB
-2. Assurez-vous que le débogage USB est activé
-3. Lancez l'application Lyroes
-4. Exécutez `make capture-screenshots`
-5. Suivez les instructions interactives pour capturer chaque écran
+**Capture instructions**:
+1. Connect your Android device via USB
+2. Ensure USB debugging is enabled
+3. Launch your app on the device
+4. Run `make capture-screenshots`
+5. Follow the interactive prompts to capture each screen
 
-**Screenshots recommandés** :
-1. Écran principal / Accueil
-2. Gameplay en action (deviner les paroles)
-3. Écran de score/résultats
-4. Classement ou fonctionnalités sociales
-5. Paramètres ou profil (optionnel)
-6. Fonctionnalités premium (optionnel)
-7-8. Moments de gameplay supplémentaires (optionnel)
+**Recommended screenshots**:
+1. Main screen / Home screen
+2. Gameplay or main feature in action
+3. Results or achievements screen
+4. Leaderboard or social features
+5. Settings or profile screen (optional)
+6. Premium features (optional)
+7-8. Additional feature highlights (optional)
 
-## 📐 Spécifications Google Play Store
+## 📐 Google Play Store Specifications
 
-### Icône de l'application
-- Format : PNG ou JPEG
-- Taille : 512x512 px
-- Taille max : 1 Mo
+### App Icon
+- Format: PNG or JPEG
+- Size: 512x512 px
+- Max file size: 1 MB
 
-### Image de présentation
-- Format : PNG ou JPEG
-- Taille : 1024x500 px
-- Taille max : 15 Mo
+### Feature Graphic
+- Format: PNG or JPEG
+- Size: 1024x500 px
+- Max file size: 15 MB
 
-### Screenshots téléphone
-- Format : PNG ou JPEG
-- Ratio : 16:9 ou 9:16
-- Taille : Entre 320px et 3840px par côté
-- Minimum : 4 screenshots (dont 3 en 16:9 ou 9:16, résolution min 1080px)
-- Taille max par image : 8 Mo
+### Phone Screenshots
+- Format: PNG or JPEG
+- Aspect ratio: 16:9 or 9:16
+- Size: Between 320px and 3840px per side
+- Minimum: 4 screenshots (3 must be 16:9 or 9:16, min 1080px resolution)
+- Max file size per image: 8 MB
 
-### Logo Google Play Games
-- Format : PNG transparent
-- Taille : 600x400 px
-- Taille max : 8 Mo
-- Doit représenter le nom du jeu
+### Google Play Games Logo
+- Format: Transparent PNG
+- Size: 600x400 px
+- Max file size: 8 MB
+- Must represent the game name
 
-### Image Google Play Games
-- Format : PNG ou JPEG
-- Ratio : 16:9
-- Taille : Entre 720px et 7680px par côté
-- Taille max : 15 Mo
-- Doit représenter la couverture du jeu (sans texte)
+### Google Play Games Feature
+- Format: PNG or JPEG
+- Aspect ratio: 16:9
+- Size: Between 720px and 7680px per side
+- Max file size: 15 MB
+- Must represent the game cover (no text)
 
-## 🛠️ Commandes Make disponibles
+## 🛠️ Available Make Commands
 
 ```bash
-make setup              # Installer les dépendances Python
-make generate-assets    # Générer les assets graphiques
-make capture-screenshots # Capturer les screenshots interactivement
-make clean             # Nettoyer les fichiers générés
-make help              # Afficher l'aide
+make setup              # Install Python dependencies
+make generate-assets    # Generate graphic assets from logo
+make capture-screenshots # Capture screenshots interactively
+make clean             # Clean generated files
+make help              # Show help
 ```
 
-## 📂 Structure du projet
+## 📂 Project Structure
 
 ```
-lyroes-playstore-tools/
-├── README.md                      # Ce fichier
-├── generate-playstore-assets.py   # Script de génération d'assets
-├── capture-screenshots.sh         # Script de capture de screenshots
-├── requirements.txt               # Dépendances Python
-├── Makefile                       # Commandes utilitaires
-├── .gitignore                     # Fichiers à ignorer par Git
-└── output/                        # Dossier de sortie (gitignored)
+playstore-assets-generator/
+├── README.md                      # This file
+├── generate-playstore-assets.py   # Asset generation script
+├── capture-screenshots.sh         # Screenshot capture script
+├── quick-capture.sh              # Quick capture (timed)
+├── requirements.txt               # Python dependencies
+├── Makefile                       # Utility commands
+├── .gitignore                     # Files to ignore by Git
+└── output/                        # Output folder (gitignored)
     ├── app-icon-512.png
     ├── feature-graphic-1024x500.png
     ├── play-games-logo-600x400.png
@@ -145,57 +149,75 @@ lyroes-playstore-tools/
         └── ...
 ```
 
-## 🎨 Personnalisation
+## 🎨 Customization
 
-### Modifier les couleurs du gradient
+### Modifying gradient colors
 
-Éditez `generate-playstore-assets.py` et modifiez les valeurs RGB dans les fonctions :
-- `create_feature_graphic()` - Pour l'image de présentation
-- `create_play_games_feature()` - Pour l'image Google Play Games
+Edit `generate-playstore-assets.py` and modify the RGB values in:
+- `create_feature_graphic()` - For the feature graphic
+- `create_play_games_feature()` - For the Play Games feature
 
-### Ajuster la taille du logo
+Current default: Purple (#6366f1) to Blue (#3b82f6) gradient
 
-Modifiez les variables `logo_height` dans les fonctions correspondantes.
+### Adjusting logo size
 
-## 🐛 Dépannage
+Modify the `logo_height` variables in the corresponding functions.
+
+## 🐛 Troubleshooting
 
 ### "Error: adb not found"
-Installez Android SDK Platform Tools :
+Install Android SDK Platform Tools:
 ```bash
-# Sur Ubuntu/Debian
+# On Ubuntu/Debian
 sudo apt install android-tools-adb
 
-# Sur macOS
+# On macOS
 brew install android-platform-tools
+
+# On Windows
+# Download from https://developer.android.com/studio/releases/platform-tools
 ```
 
 ### "Error: No Android device connected"
-1. Connectez votre appareil via USB
-2. Activez le débogage USB dans les options développeur
-3. Autorisez l'ordinateur sur l'appareil quand demandé
-4. Vérifiez avec `adb devices`
+1. Connect your device via USB
+2. Enable USB debugging in developer options
+3. Authorize the computer on the device when prompted
+4. Verify with `adb devices`
 
 ### "ModuleNotFoundError: No module named 'PIL'"
-Installez les dépendances :
+Install dependencies:
 ```bash
 make setup
-# ou
+# or
 python3 -m venv venv
-source venv/bin/activate  # ou venv\Scripts\activate sur Windows
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
-## 📝 Licence
+### "Error: Logo not found"
+Make sure to provide the correct path to your logo:
+```bash
+make generate-assets LOGO_PATH=/path/to/your/logo.png
+```
 
-Privé - Usage interne Lyroes uniquement
+## 📝 License
 
-## 👤 Auteur
+MIT License - Feel free to use this tool for your own projects!
+
+## 👤 Author
 
 Yoann SACHOT - [YoannSACHOT](https://github.com/YoannSACHOT)
 
-## 🔗 Liens
+## 🤝 Contributing
 
-- [Lyroes Backend](https://github.com/YoannSACHOT/lyroes)
-- [Lyroes Web GUI](https://github.com/YoannSACHOT/lyroes-web-gui)
-- [Lyroes Mobile](https://github.com/YoannSACHOT/lyroes-mobile)
+Contributions, issues, and feature requests are welcome!
+
+## ⭐ Show your support
+
+Give a ⭐ if this project helped you!
+
+## 🔗 Related Links
+
 - [Google Play Console](https://play.google.com/console)
+- [Google Play Store Listing Guidelines](https://support.google.com/googleplay/android-developer/answer/9866151)
+- [Android Asset Studio](https://romannurik.github.io/AndroidAssetStudio/)
