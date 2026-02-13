@@ -66,7 +66,7 @@ RESOLUTION=$(adb -s "$DEVICE_ID" shell wm size | grep "Physical size" | cut -d: 
 echo -e "${BLUE}Device resolution: $RESOLUTION${NC}"
 
 # Check if app is running
-PACKAGE_NAME="com.jixter.lyroes"
+PACKAGE_NAME="fr.jixter.lyroes"
 echo -e "\n${BLUE}Checking if Lyroes is running...${NC}"
 if ! adb -s "$DEVICE_ID" shell pidof "$PACKAGE_NAME" &> /dev/null; then
     echo -e "${YELLOW}⚠ Lyroes app is not running. Launching...${NC}"
